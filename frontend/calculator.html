@@ -5,136 +5,225 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Carbon — Dark Dashboard</title>
 
-<link rel="stylesheet" href="assets/css/style.css">
-<link rel="stylesheet" href="assets/css/calculator.css">
-
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/calculator.css">
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <!-- icons (optional) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="brand">
-        <img src="assets/images/logo.png" alt="logo" class="logo">
-        <h1>Carbon</h1>
+  <button id="themeToggle" class="theme-toggle">🌓</button>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <h1>Carbon</h1>
+    </div>
+
+    <nav class="nav">
+      <a href="home.html">Home</a>
+      <a class="active" href="calculator.html">Calculator</a>
+    </nav>
+
+    <div class="coins">
+      <div class="coin-icon">🟢</div>
+      <div>
+        <div class="label">Eco Coins</div>
+        <div id="coinsCount" class="coin-value">0</div>
       </div>
+    </div>
 
-      <nav class="nav">
-        <a href="home.html">Home</a>
-        <a class="active" href="calculator.html">Calculator</a>
-        <a href="blog.html">Blog</a>
-      </nav>
+    <div class="footer-note">
+      <small>Dark Eco Mode • Local Dev</small>
+    </div>
+  </aside>
 
-      <div class="coins">
-        <div class="coin-icon">🟢</div>
-        <div>
-          <div class="label">Eco Coins</div>
-          <div id="coinsCount" class="coin-value">0</div>
-        </div>
+  <main class="main">
+    <header class="main-header">
+      <h2>Carbon Emission Calculator</h2>
+      <div class="header-actions">
+        <button id="btnForecast" class="ghost">Forecast</button>
+        <button id="btnTips" class="ghost">Get Tips</button>
       </div>
+    </header>
 
-      <div class="footer-note">
-        <small>Dark Eco Mode • Local Dev</small>
-      </div>
-    </aside>
+    <section class="grid">
+      <section class="card input-card">
+        <h3>Quick Inputs</h3>
 
-    <main class="main">
-      <header class="main-header">
-        <h2>Carbon Emission Calculator</h2>
-        <div class="header-actions">
-          <button id="btnForecast" class="ghost">Forecast</button>
-          <button id="btnTips" class="ghost">Get Tips</button>
-        </div>
-      </header>
+        <form id="carbonForm" class="form">
+          <label>Electricity (kWh / month)</label>
+          <input id="electricity" type="number" min="0" step="0.1" placeholder="e.g. 200">
 
-      <section class="grid">
-        <section class="card input-card">
-          <h3>Quick Inputs</h3>
+          <label>Fuel (litres / month)</label>
+          <input id="fuel" type="number" min="0" step="0.1" placeholder="e.g. 50">
 
-          <form id="carbonForm" class="form">
-            <label>Electricity (kWh / month)</label>
-            <input id="electricity" type="number" min="0" step="0.1" placeholder="e.g. 200">
+          <label>Waste (kg / month)</label>
+          <input id="waste" type="number" min="0" step="0.1" placeholder="e.g. 20">
 
-            <label>Fuel (litres / month)</label>
-            <input id="fuel" type="number" min="0" step="0.1" placeholder="e.g. 50">
-
-            <label>Waste (kg / month)</label>
-            <input id="waste" type="number" min="0" step="0.1" placeholder="e.g. 20">
-
-            <div class="row">
-              <button id="calcBtn" type="button" class="primary">Calculate</button>
-              <button id="saveBtn" type="button" class="secondary">Save + Log</button>
-            </div>
-
-            <div class="upload-zone" id="uploadZone">
-              <label class="muted">Upload bill / receipt (PDF / image)</label>
-              <input id="billInput" type="file" accept="application/pdf,image/*">
-              <div id="ocrHint" class="muted small">Upload a bill and press "Scan" below</div>
-              <div class="row" style="margin-top:.5rem;">
-                <button id="scanBtn" type="button" class="ghost">Scan</button>
-                <button id="fillDetected" type="button" class="ghost" style="display:none">Use detected kWh</button>
-              </div>
-            </div>
-          </form>
-        </section>
-
-        <section class="card result-card">
-          <h3>Result</h3>
-          <div id="meter" class="meter">
-            <div class="meter-value" id="meterValue">0 kg</div>
-            <div class="meter-sub" id="meterSub">Monthly CO₂</div>
+          <div class="row">
+            <button id="calcBtn" type="button" class="primary">Calculate</button>
+            <button id="saveBtn" type="button" class="secondary">Save + Log</button>
           </div>
 
-          <div id="resultBox" class="result-box hidden">
-            <div id="resultAnimated" class="big-number">0</div>
-            <div id="resultMsg" class="muted">—</div>
-            <div class="breakdown" id="breakdownBox"></div>
-          </div>
+          <div class="upload-zone">
+            <label class="muted">Upload bill / receipt (PDF / image)</label>
+            <input id="billInput" type="file" accept="application/pdf,image/*">
+            <div id="ocrHint" class="muted small">Upload a bill and press "Scan" below</div>
 
-          <div class="mini-cards">
-            <div class="mini">
-              <div class="mini-title">Forecast</div>
-              <div id="forecastVal" class="mini-value">—</div>
-            </div>
-            <div class="mini">
-              <div class="mini-title">Last Avg</div>
-              <div id="lastAvg" class="mini-value">—</div>
+            <div class="row" style="margin-top:.5rem;">
+              <button id="scanBtn" type="button" class="ghost">Scan</button>
             </div>
           </div>
-
-          <canvas id="trendChart" height="140"></canvas>
-        </section>
+        </form>
       </section>
 
-      <section class="cards-row">
-        <section class="card tips-card">
-          <h3>Personalized Tips</h3>
-          <div id="tipsList">
-            <p class="muted">No tips yet. Click "Get Tips".</p>
-          </div>
-        </section>
+      <section class="card result-card">
+        <h3>Result</h3>
 
-        <section class="card handprint-card">
-          <h3>Handprint / Rewards</h3>
-          <label>Describe action</label>
-          <input id="hpDesc" placeholder="e.g. Suggested friend to bike" />
-          <label>Estimated CO₂ saved (kg)</label>
-          <input id="hpKg" type="number" min="0" step="0.1" />
-          <div class="row" style="margin-top:.6rem;">
-            <button id="addHandprint" class="secondary">Add Handprint</button>
-          </div>
+        <div id="meter" class="meter">
+          <div class="meter-value" id="meterValue">0 kg</div>
+          <div class="meter-sub">Monthly CO₂</div>
+        </div>
 
-          <div id="handprintMsg" class="muted small" style="margin-top:.6rem;"></div>
-        </section>
+        <div class="breakdown" id="breakdownBox"></div>
+
+        <div class="mini-cards">
+          <div class="mini">
+            <div class="mini-title">Forecast</div>
+            <div id="forecastVal" class="mini-value">—</div>
+          </div>
+          <div class="mini">
+            <div class="mini-title">Last Avg</div>
+            <div class="mini-value">—</div>
+          </div>
+        </div>
+
+        <!-- ✅ GRAPH -->
+        <canvas id="trendChart" height="140"></canvas>
       </section>
-    </main>
-  </div>
+    </section>
 
-  <script type="module" src="assets/js/api.js"></script>
-  <script type="module" src="assets/js/calculator.js"></script>
+    <section class="cards-row">
+      <section class="card tips-card">
+        <h3>Personalized Tips</h3>
+        <div id="tipsList">
+          <p class="muted">No tips yet. Click "Get Tips".</p>
+        </div>
+      </section>
+
+      <section class="card handprint-card">
+        <h3>Handprint / Rewards</h3>
+        <label>Describe action</label>
+        <input id="hpDesc" placeholder="e.g. Suggested friend to bike" />
+        <label>Estimated CO₂ saved (kg)</label>
+        <input id="hpKg" type="number" min="0" step="0.1" />
+
+        <div class="row" style="margin-top:.6rem;">
+          <button id="addHandprint" class="secondary">Add Handprint</button>
+        </div>
+
+        <div id="handprintMsg" class="muted small"></div>
+      </section>
+    </section>
+  </main>
+</div>
+
+<!-- ===================== -->
+<!-- ✅ ADDED SCRIPT BELOW -->
+<!-- ===================== -->
+<script>
+let chart;
+
+const electricityInput = document.getElementById("electricity");
+const fuelInput = document.getElementById("fuel");
+const wasteInput = document.getElementById("waste");
+const meterValue = document.getElementById("meterValue");
+const breakdownBox = document.getElementById("breakdownBox");
+const forecastVal = document.getElementById("forecastVal");
+
+/* 🔥 GRAPH FUNCTION BACK */
+function renderChart(total) {
+const ctx = document.getElementById("trendChart").getContext("2d");
+
+if (chart) chart.destroy();
+
+chart = new Chart(ctx, {
+type: "line",
+data: {
+labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+datasets: [{
+label: "CO₂ Emissions (kg)",
+data: [280, 295, 310, 305, total],
+borderColor: "#4CAF50",
+backgroundColor: "rgba(76,175,80,0.25)",
+tension: 0.4,
+fill: true
+}]
+}
+});
+}
+
+/* ✅ CALCULATE */
+document.getElementById("calcBtn").onclick = () => {
+
+const e = +electricityInput.value || 0;
+const f = +fuelInput.value || 0;
+const w = +wasteInput.value || 0;
+
+const ele = e * 0.82;
+const fuelEm = f * 2.31;
+const wasteEm = w * 0.5;
+const total = ele + fuelEm + wasteEm;
+
+meterValue.innerText = total.toFixed(1) + " kg";
+
+breakdownBox.innerHTML = `     <p>Electricity: ${ele.toFixed(1)} kg</p>     <p>Fuel: ${fuelEm.toFixed(1)} kg</p>     <p>Waste: ${wasteEm.toFixed(1)} kg</p>
+  `;
+
+forecastVal.innerText = (total * 1.08).toFixed(1) + " kg";
+
+renderChart(total); // 🔥 GRAPH BACK
+};
+
+/* ✅ SAVE TO DATABASE */
+document.getElementById("saveBtn").onclick = async () => {
+
+  const e = +document.getElementById("electricity").value || 0;
+  const f = +document.getElementById("fuel").value || 0;
+  const w = +document.getElementById("waste").value || 0;
+
+  try {
+    const res = await fetch("http://localhost:8080/api/log-emission", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: `userId=1&electricity=${e}&fuel=${f}&waste=${w}`
+    });
+
+    const text = await res.text();
+
+    console.log("STATUS:", res.status);
+    console.log("RESPONSE:", text);
+
+    if (!res.ok) {
+      alert("❌ Backend Error: " + text);
+      return;
+    }
+
+    alert("✅ SAVED TO DATABASE!");
+
+  } catch (err) {
+    console.error("FETCH ERROR:", err);
+    alert("❌ Cannot connect to backend");
+  }
+};
+
+</script>
+
 </body>
 </html>
