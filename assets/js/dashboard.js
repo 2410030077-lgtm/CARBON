@@ -1,4 +1,4 @@
-const backend = "http://localhost:8000";
+const backend = "https://carbon-backend-1-qzdy.onrender.com";
 const user = JSON.parse(localStorage.getItem("user"));
 
 if (!user) {

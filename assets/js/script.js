@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000";
+const API = "https://carbon-backend-1-qzdy.onrender.com";
 
 document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
