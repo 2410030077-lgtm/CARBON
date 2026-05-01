@@ -1,5 +1,5 @@
 // api.js - small helper for backend calls
-export const API_BASE = "http://127.0.0.1:8000";
+export const API_BASE = "https://carbon-backend-1-qzdy.onrender.com";
 
 export async function postForm(endpoint, formData) {
   const res = await fetch(`${API_BASE}${endpoint}`, {
