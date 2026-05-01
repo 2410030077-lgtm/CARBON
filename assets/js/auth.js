@@ -1,4 +1,4 @@
-const backendUrl = "http://127.0.0.1:8000";
+const backendUrl = "https://carbon-backend-1-qzdy.onrender.com";
 
 document.getElementById("signupForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -10,7 +10,10 @@ document.getElementById("signupForm")?.addEventListener("submit", async (e) => {
   try {
     const res = await fetch(`${backendUrl}/auth/signup`, {
       method: "POST",
-      body: new URLSearchParams({ username, email, password }),
+      headers: {
+  "Content-Type": "application/json"
+},
+body: JSON.stringify({ username, email, password }),
     });
     const data = await res.json();
     if (res.ok) {
@@ -37,7 +40,10 @@ document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
   try {
     const res = await fetch(`${backendUrl}/auth/login`, {
       method: "POST",
-      body: new URLSearchParams({ username, password }),
+      headers: {
+  "Content-Type": "application/json"
+},
+body: JSON.stringify({ username, password }),
     });
     const data = await res.json();
     if (res.ok) {
